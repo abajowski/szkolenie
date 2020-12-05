@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion : 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: Device Manager Api
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: device-manager-api
+  CloudWatchLogsRetentionInDays:
+    Type: String
+    Default: 7
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - test
+      - prod
+
+Globals:
+  Function:
+    Runtime: nodejs10.x
+    MemorySize: 256
+    Tracing: Active
+    Tags:
+      PROJECT: !Ref ProjectName
+      STAGE: !Ref Environment
+    Environment:
+      Variables:
+        ENVIRONMENT: !Ref Environment
+
+Resources:
+  CreateDeviceLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/functions/device/post.handler
+      Timeout: 10
+      Role: !GetAtt CreateDeviceLambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          CREATE_DEVICE_TOPIC: !Ref NewDeviceSns
+      Events:
+        SendMessageEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref DeviceManagerApi
+            Path: /device
+            Method: POST
+
+  CreateDeviceLambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${CreateDeviceLambda}
+      RetentionInDays: !Ref CloudWatchLogsRetentionInDays
+
+  CreateDeviceLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+      Policies:
+        - PolicyName: !Sub ${ProjectName}-${Environment}-sap-lambda-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref NewDeviceSns
+  
+  APIGatewayPushToCloudWatchLogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+  
+  Account:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt APIGatewayPushToCloudWatchLogsRole.Arn
+
+  DeviceManagerApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Environment
+      MethodSettings:
+      - DataTraceEnabled: true
+        HttpMethod: "*"
+        LoggingLevel: INFO
+        MetricsEnabled: true
+        ResourcePath: "/*"
+      DefinitionUri: ./temp/open-api.yaml
+      Variables:
+        StageName: !Ref Environment
+        CreateDevice: !Ref CreateDeviceLambda
+  
+
+  DeviceManagerApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Enabled: true
+  DeviceManagerUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref DeviceManagerApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref DeviceManagerUsagePlan
+  DeviceManagerUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn: DeviceManagerApiStage
+    Properties:
+      ApiStages:
+      - ApiId: !Ref DeviceManagerApi
+        Stage: !Ref Environment
+      Description: Device Manager API usage plan
+      Quota:
+        Limit: 50000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 200
+        RateLimit: 100
+      UsagePlanName: DeviceManagerApi
+
+  NewDeviceSns:
+    Type: AWS::SNS::Topic
+
+Outputs:
+  NewDeviceSnsArn: 
+    Value: !Ref NewDeviceSns
+  ApiUrl:
+    Description: URL of the API endpoint
+    Value: !Sub https://${DeviceManagerApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}
+
+
