@@ -1,3 +1,0 @@
-# NEXTJS ON EDGE
-
-TBD

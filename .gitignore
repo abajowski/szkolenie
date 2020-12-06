@@ -256,3 +256,6 @@ postman/postman-environment-private-api.json
 
 # temporary sam template
 temp/
+
+
+.terraform

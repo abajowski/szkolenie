@@ -1,0 +1,30 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  build:
+    commands:
+      - cd ./services/device-manager-api/
+      - ./deploy.sh "$ENVIRONMENT-$PROJECT_NAME-api" $ARTIFACTS_BUCKET C $AWS_REGION $ENVIRONMENT
+      - cd ../../
+      - cp ./services/device-manager-api/temp/*.yaml .
+      
+      - cd ./services/device-configuration/
+      - ./deploy.sh "$ENVIRONMENT-$PROJECT_NAME-configuration" $ARTIFACTS_BUCKET C $AWS_REGION $ENVIRONMENT
+      - cd ../../
+      - cp ./services/device-configuration/temp/*.yaml .
+      
+      - cd ./services/device-storage/
+      - ./deploy.sh "$ENVIRONMENT-$PROJECT_NAME-storage" $ARTIFACTS_BUCKET C $AWS_REGION $ENVIRONMENT
+      - cd ../../
+      - cp ./services/device-storage/temp/*.yaml .
+      
+      - cd ./services/sap-notification/
+      - ./deploy.sh "$ENVIRONMENT-$PROJECT_NAME-sap-notification" $ARTIFACTS_BUCKET $AWS_REGION $ENVIRONMENT
+      - cd ../../
+      - cp ./services/sap-notification/temp/*.yaml .
+         
+artifacts:
+  files:
+    - '*.yaml'

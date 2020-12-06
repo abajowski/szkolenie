@@ -1,0 +1,21 @@
+{
+  "Records": [
+      {
+          "messageId": "a5d06252-2b74-4ffa-9018-21a08dcd3416",
+          "receiptHandle": "AQEB8yhzjabFVKrMs4tdi3Z3RW2H5yPjGvgwNflchvpGfGVky96tDpRMXrruJ+lSpcI6j865KnpEDmCFYQv5bcFOc1UJuGvjOCetGcxPQN1RR1cUZu7XPIkuyT7iHSaPiTNoxKxvSg44tw8/hanuSJpvjjfwaQbszv7D016WsS8lzA0WKAYDGeV0tfivubR9BxXdgkpSuFHUA0ZyXDckTOmBvSTWt3IziNwnrbjz4JYIDZbnPHs2EOr7VDD4pJVRR3+KLaLU7AG/FcddxvC4GoKLwG3RAXdb1le7we2LFhgiH1s86amosb98BPLs/1N3nfnEkrHumOIkThvWwnHRp0YGoVylcWVK11vryAYXissICBSd45UvHTryTkjwhgUIKn3zfBAbxX42McoS8NQFupjMztsGu+lvxbZfPvtPhLSh8BYKz4E28XnzJTaC93uwi6ar",
+          "body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"7853b1d7-5649-582e-97b1-e7e9c367a445\",\n  \"TopicArn\" : \"arn:aws:sns:eu-west-1:646407006236:dev-device-manager-api-NewDeviceSns-QILOE6U2JYYF\",\n  \"Message\" : \"{\\\"deviceId\\\":\\\"38a13bc7-24fa-4f22-a64d-53d8583997ae\\\",\\\"name\\\":\\\"name\\\"}\",\n  \"Timestamp\" : \"2019-11-07T21:55:58.703Z\",\n  \"SignatureVersion\" : \"1\",\n  \"Signature\" : \"JnCmzLQc+M0sytsLP1qVent9NzhAqA+B7n4D3v0vDCrCQN84Z0DKOCoQ+9LA5GilEL+5caBatVXMcnteTcAgP9z3Ftm7kkQoplUnjvyKYGMH+Ww/zd98elauVLQ9KL4lHViYikdHJrOTXnUGu4otgUBlO5shrUAjO8c/9yJ/Fn72PvlE4j9M4Qw3trMqCkJEtMsdxBmKVVoXXbjy8cEmdtXNzCoWD85AgiTSvvfwJ/VwABIZxajoLpmDCgGA3sQ8G7V16zp4y7ITJtYCyv6FiABOaY0IWlU6mIXGvarbwHdsufRY6+HmOFHWt2lQcpCUcbULTkdFD4MFpsVqiG+xeA==\",\n  \"SigningCertURL\" : \"https://sns.eu-west-1.amazonaws.com/SimpleNotificationService-6aad65c2f9911b05cd53efda11f913f9.pem\",\n  \"UnsubscribeURL\" : \"https://sns.eu-west-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-1:646407006236:dev-device-manager-api-NewDeviceSns-QILOE6U2JYYF:c8763fd8-b7ad-4e73-8296-e6d785fe32e2\"\n}",
+          "attributes": {
+              "ApproximateReceiveCount": "1",
+              "AWSTraceHeader": "Root=1-5dc492ed-dc61be8fb3338015ce41e0d1;Parent=3a44143b2e120f12;Sampled=1",
+              "SentTimestamp": "1573163758746",
+              "SenderId": "AIDAISMY7JYY5F7RTT6AO",
+              "ApproximateFirstReceiveTimestamp": "1573163758751"
+          },
+          "messageAttributes": {},
+          "md5OfBody": "59e2d33d54e49377e563735ac2277556",
+          "eventSource": "aws:sqs",
+          "eventSourceARN": "arn:aws:sqs:eu-west-1:646407006236:dev-device-storage-DeviceStorageQueue-60OCM3KQGRDX",
+          "awsRegion": "eu-west-1"
+      }
+  ]
+}
