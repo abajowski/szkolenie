@@ -69,3 +69,10 @@ module "user_directory" {
   application = var.application
   region      = var.aws_region
 }
+
+module "analytics" {
+  source      = "./modules/analytics"
+  environment = local.environment
+  application = var.application
+  region      = var.aws_region
+}
