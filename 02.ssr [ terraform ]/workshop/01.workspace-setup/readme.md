@@ -39,3 +39,19 @@ Clone the repository to your **Cloud9** environment and start working on code. R
 4. Choose **Ireland (eu-west-1)** region
 5. Click **Next** three times, then click **Create bucket**
 
+### CONFIGURE AWS CREDENTIALS LOCALLY
+
+1. Go to **Cloud9** web console.
+2. In terminal window configure the AWS CLI
+```bash
+aws configure
+```
+4. Set your admin **AWS Access Key ID** and **AWS Secret Access Key** which you received ealier. If you don't have this credentials ask you tutor 
+5. Set **Default region name** to **eu-west-1**
+6. Set **Default output format** to **json**
+7. To verify that everything is working run
+```bash
+aws sts get-caller-identity
+```
+If you see returned information go to next part
+
