@@ -14,24 +14,24 @@ Amazon Cognito lets you add user sign-up, sign-in, and access control to your we
 
 ### AUTHENTICATION
 
-1. Be sure to be in ***library** directory 
+1. Be sure to be in **library** directory 
 
 2. Run ```amplify add auth``` to add authentication to the app
 
-3. Select ```Default Configuration``` when asked if you’d like to use the default authentication and security configuration
+3. Select **Default Configuration** when asked if you’d like to use the default authentication and security configuration
 
-4. ```Select Username`` when asked how you want users to sign in
+4. **Select Username** when asked how you want users to sign in
 
-5. Select ***No, I am done***
+5. Select **No, I am done**
 
 7. Run ```amplify push``` to create these changes in the cloud
 
-8.  Add the ***aws-amplify*** and ***aws-amplify-react** modules to our app by typing 
+8.  Add the **aws-amplify** and **aws-amplify-react** modules to our app by typing 
 ```bash
 npm install --save aws-amplify@3.0.7 aws-amplify-react@3.1.9
 ```
 
-9. Replace ***src/App.js*** with file ***App.js*** which is saved in ***source*** directory
+9. Replace **src/App.js** with file **App.js** which is saved in **source** directory
 
 ### CREATE AN ACCOUNT
 

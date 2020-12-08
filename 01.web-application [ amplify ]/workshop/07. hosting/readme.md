@@ -12,7 +12,7 @@ Amazon Simple Storage Service (Amazon S3) is an object storage service that offe
 
 ## STEPS
 
-### DEPLOYING APP TO S#
+### DEPLOYING APP TO S3
 
 1. Run ```amplify hosting add```, select a deployment mode ***development**, and respond to the questions (you can accept the default value of index.html for the index and error doc).
 

@@ -19,5 +19,12 @@ https://github.com/facebook/create-react-app
 1. Go to **Cloud9** web console.
 2. Run ```npx create-react-app library```
 3. Navigate to the newly created directory
-4. Start the app by ```npm start```
-5. Once the web server has started, click the ***Preview*** menu and select ***Preview Running Application***
+4. Install ```npm install --save semantic-ui-react```
+5. In **public/index.html** file add in the header section 
+```html
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
+```
+
+6. Start the app by ```npm start```
+7. Once the web server has started, click the **Preview** menu and select **Preview Running Application**
+

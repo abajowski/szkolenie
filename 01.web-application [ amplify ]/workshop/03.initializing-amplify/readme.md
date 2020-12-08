@@ -2,7 +2,7 @@
 
 ## LAB PURPOSE
 
-Initialize AWS Amplify CLI that makes it easy for us to add cloud capabilities to our web and mobile apps, with SDKs available for React and React Native, iOS, and Android.
+Initialize AWS Amplify CLI that makes it easy for us to add cloud capabilities to web and mobile apps
 
 ## DEFINITIONS
 ----
@@ -14,44 +14,44 @@ AWS Amplify is a set of tools and services that can be used together or on their
 
 ### AMPLIFY
 
-1. Be sure to be in ***library** directory 
+1. Be sure to be in **library** directory 
 
 2. Run ```amplify init```
 
-3. Press Enter to accept the default project name ***library***
+3. Press Enter to accept the default project name **library**
 
-4. Enter ***dev*** for the environment name
+4. Enter **dev** for the environment name
 
-5. Select ***None*** for the default editor (we’re using Cloud9)
+5. Select **None** for the default editor (we’re using Cloud9)
 
-6. Choose ***JavaScript*** and ***React*** when prompted
+6. Choose **JavaScript** and **React** when prompted
 
-7. Set ***Source Directory Path** to default
+7. Set **Source Directory Path** to default
 
-8. Set ***Distribution Directory Path*** to default
+8. Set **Distribution Directory Path** to default
 
-9. Leave default value for ***Build Command*** and ***Start Command***
+9. Leave default value for **Build Command** and **Start Command**
 
-10. Specify the AWS Region ***eu-west-1***
+10. Specify the AWS Region **eu-west-1**
 
-11. Specify the username of the new IAM user: ***amplify***
+11. Specify the username of the new IAM user: **amplify**
 
 12. Open genrated url in the new tab
 
-13. Click ***Next Permissions**
+13. Click **Next Permissions**
 
-14. Click ***Next Tags***
+14. Click **Next Tags**
 
-15. Click ***Next Review***
+15. Click **Next Review**
 
-16. Click ***Create User***
+16. Click **Create User**
 
-17. Save credentials and go back to ***Cloud9***
+17. Save credentials and go back to **Cloud9**
 
 18. Add Credentials from the file
 
-19. Leave ***Profile Name*** as default
+19. Leave **Profile Name** as default
 
-20. Choose ***Yes*** for question:  Do you want to use an AWS profile 
+20. Choose **Yes** for question:  Do you want to use an AWS profile 
 
 21. Press Enter

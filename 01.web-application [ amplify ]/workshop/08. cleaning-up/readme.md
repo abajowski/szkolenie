@@ -21,4 +21,4 @@ Cleaning up resources
 
 2. Select the environment named workshop and pick Delete
 
-3. Type the phrase ***Delete*** into the confirmation box and click Delete
+3. Type the phrase **Delete** into the confirmation box and click Delete

@@ -1,41 +1,42 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
 
 import Amplify, {Auth} from 'aws-amplify'
 import API, {graphqlOperation} from '@aws-amplify/api'
 import aws_exports from './aws-exports'
 
 import {withAuthenticator} from 'aws-amplify-react'
+import {Grid, Header, Input, List, Segment} from 'semantic-ui-react'
 
-import {BrowserRouter as Router, Route, NavLink} from 'react-router-dom'
+import {BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 
 import * as queries from './graphql/queries'
 import * as mutations from './graphql/mutations'
 import * as subscriptions from './graphql/subscriptions'
 
-Amplify.configure(aws_exports)
+Amplify.configure(aws_exports);
 
 function makeComparator(key, order = 'asc') {
   return (a, b) => {
     if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) 
-      return 0
+      return 0;
     
     const aVal = (typeof a[key] === 'string')
       ? a[key].toUpperCase()
-      : a[key]
+      : a[key];
     const bVal = (typeof b[key] === 'string')
       ? b[key].toUpperCase()
-      : b[key]
+      : b[key];
 
-    let comparison = 0
+    let comparison = 0;
     if (aVal > bVal) 
-      comparison = 1
+      comparison = 1;
     if (aVal < bVal) 
-      comparison = -1
+      comparison = -1;
     
     return order === 'desc'
       ? (comparison * -1)
       : comparison
-  }
+  };
 }
 
 const NewAlbum = () => {
@@ -43,7 +44,7 @@ const NewAlbum = () => {
     setName] = useState('')
 
   const handleSubmit = async(event) => {
-    event.preventDefault()
+    event.preventDefault();
     await API.graphql(graphqlOperation(mutations.createAlbum, {input: {
         name
       }}))
@@ -94,7 +95,7 @@ const AlbumsList = () => {
     }
     setupSubscription()
 
-    return () => subscription.unsubscribe()
+    return () => subscription.unsubscribe();
   }, [])
 
   const albumItems = () => {
@@ -102,7 +103,7 @@ const AlbumsList = () => {
       .sort(makeComparator('name'))
       .map(album => <List.Item key={album.id}>
         <NavLink to={`/albums/${album.id}`}>{album.name}</NavLink>
-      </List.Item>)
+      </List.Item>);
   }
 
   return (
@@ -112,7 +113,7 @@ const AlbumsList = () => {
         {albumItems()}
       </List>
     </Segment>
-  )
+  );
 }
 
 const AlbumDetails = (props) => {

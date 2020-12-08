@@ -36,7 +36,6 @@ Clone the repository to your **Cloud9** environment and start working on code. R
 1. Install the AWS Amplify CLI
 ```bash
 npm install -g @aws-amplify/cli@4.37.1
-
 ```
 2. Install jq
 ```bash

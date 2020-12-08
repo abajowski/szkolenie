@@ -14,11 +14,11 @@ Amazon Simple Storage Service (Amazon S3) is an object storage service that offe
 
 ### AUTHENTICATION
 
-1. Be sure to be in ***albums** directory 
+1. Be sure to be in **albums** directory 
 
 2. Run ```amplify add storage``` to add storage
 
-3. Select ***Content** at the prompt
+3. Select **Content** at the prompt
 
 4. Enter values or accept defaults for the resource category and bucket name
 
@@ -36,6 +36,6 @@ Amazon Simple Storage Service (Amazon S3) is an object storage service that offe
 
 1. From the albums directory, run ```npm install --save uuid @aws-amplify/storage```
 
-2. Replace ***src/App.js*** with file ***App.js*** which is saved in ***source*** directory
+2. Replace **src/App.js** with file **App.js** which is saved in **source** directory
 
 3. Check out the app now and try out the new features

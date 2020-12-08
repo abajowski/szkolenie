@@ -1,4 +1,4 @@
-# 03. CREATE STORAGE
+# 04. CREATE STORAGE
 
 ## LAB PURPOSE
 
@@ -99,7 +99,7 @@ terraform apply
 
 1. Inside **storage** directory create **dynamodb.tf** file
 
-2. In newly created file add resource responsivle for dynamodb creatrion
+2. In newly created file add resource responsive for dynamodb creation
 
 ```terraform
 resource "aws_dynamodb_table" "blog" {
