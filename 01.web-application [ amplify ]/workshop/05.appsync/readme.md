@@ -88,7 +88,7 @@ query {
 
 ### UPDATE THE APP
 
-1. From the albums directory, run ```npm install --save react-router-dom @aws-amplify/api``` to add new dependencies for routing and specific modules we’ll use from Amplify.
+1. From the library directory, run ```npm install --save react-router-dom @aws-amplify/api``` to add new dependencies for routing and specific modules we’ll use from Amplify.
 
 2. Replace **src/App.js** with file **App.js** which is saved in **source** directory
 
