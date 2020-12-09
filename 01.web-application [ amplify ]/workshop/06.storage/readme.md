@@ -14,7 +14,7 @@ Amazon Simple Storage Service (Amazon S3) is an object storage service that offe
 
 ### AUTHENTICATION
 
-1. Be sure to be in **albums** directory 
+1. Be sure to be in **library** directory 
 
 2. Run ```amplify add storage``` to add storage
 

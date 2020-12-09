@@ -4,14 +4,17 @@ locals {
 
 provider "aws" {
   region  = var.aws_region
+  version = "3.6.0"
 }
 
 provider "aws" {
   alias   = "us-east-1"
   region  = "us-east-1"
+  version = "3.6.0"
 }
 
 terraform {
+  required_version = "0.13.3"
 
   backend "s3" {
     bucket  = "cd-nextjs-on-the-edge"

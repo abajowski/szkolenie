@@ -13,13 +13,13 @@ Amazon CloudFront is a fast content delivery network (CDN) service that securely
 
 ## STEPS
 
-### CREATE LAMBDA FUNCTION
+### CREATE CDN DISTRIBUTION
 
-2. Inside **modules**  directory create **cdn** directory
+1. Inside **modules**  directory create **cdn** directory
 
-3. Inside **cdn** directory create two files **main.tf** and **variables.tf** and **outputs.tf**
+2. Inside **cdn** directory create three files **main.tf** and **variables.tf** and **outputs.tf**
 
-4. Define variables for the the cdm module in the **variables.tf** file
+3. Define variables for the the cdn module in the **variables.tf** file
 
 ```terraform
 variable "application" {
@@ -49,13 +49,13 @@ variable "orgin_api_domain_name" {
 }
 ```
 
-5. Add to the **main.tf** code that create Origin Access Identity
+4. Add to the **main.tf** code that create Origin Access Identity
 
 ```terraform
 resource "aws_cloudfront_origin_access_identity" "blog" {}
 ```
 
-6. Add cloudfront distribution.
+5. Add cloudfront distribution.
 
 ```
 resource "aws_cloudfront_distribution" "distribution" {
@@ -168,9 +168,9 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 ```
 
-7. Try to verify what each section of this resource do **https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution**
+6. Try to verify what each section of this resource do **https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution**
 
-8. In the **outputs.tf** file, create resource 
+7. In the **outputs.tf** file, create resource 
 
 ```terraform
 output "origin_access_identity" {
@@ -178,7 +178,7 @@ output "origin_access_identity" {
 }
 ```
 
-9. Add the module to the project. In the **main.tf** file in the **ssr** directory add
+8. Add the module to the project. In the **main.tf** file in the **ssr** directory add
 ```terraform
 module "cdn" {
   source             = "./modules/cdn"
@@ -194,7 +194,7 @@ module "cdn" {
 }
 ```
 
-10. Now you have to add permission to access s3 by cloudfront. To do so , go to **storage** module to **s3.tf** file and add 
+9. Now you have to add permission to access s3 by cloudfront. To do so , go to **storage** module to **s3.tf** file and add 
 
 ```terraform
 data "aws_iam_policy_document" "s3_policy" {
@@ -216,7 +216,7 @@ resource "aws_s3_bucket_policy" "policy" {
 
 ```
 
-11. In this directory modify **variables.tf** file to have
+10. In this directory modify **variables.tf** file to have
 
 ```terraform
 variable "application" {
@@ -234,7 +234,7 @@ variable "origin_access_identity" {
 }
 ```
 
-12. Modify the module **storage** in the **main.tf** file which is located in **ssr** directory
+11. Modify the module **storage** in the **main.tf** file which is located in **ssr** directory
 
 ```terraform
 module "storage" {
@@ -259,4 +259,4 @@ terraform plan
 terraform apply
 ```
 
-12. Go to AWS console and verify if cloudfront is created
+13. Go to AWS console and verify if cloudfront is created

@@ -19,11 +19,11 @@ Amazon API Gateway is an AWS service for creating, publishing, maintaining, moni
 
 ### CREATE LAMBDA FUNCTION
 
-2. Inside **modules**  directory create **api** directory
+1. Inside **modules**  directory create **api** directory
 
-3. Inside **api** directory create two files **lambda.tf** and **variables.tf**
+2. Inside **api** directory create two files **lambda.tf** and **variables.tf**
 
-4. Define variables for the the api module in the **variables.tf** file
+3. Define variables for the the api module in the **variables.tf** file
 
 ```terraform
 variable "application" {
@@ -47,11 +47,11 @@ variable "blog_table_arn" {
 }
 ```
 
-5. Now let's prepare the nextjs code to be run on lambda function. To do so, copy **src** directory into **api** directory
+4. Now let's prepare the nextjs code to be run on lambda function. To do so, copy **src** directory into **api** directory
 
-6. Inside the directory **src** you have files responsible for the serving & rendered pages, analyze the code
+5. Inside the directory **src** you have files responsible for the serving & rendered pages, analyze the code
 
-7. Add to the **lambda.tf** code that triggers the proccess of building package, needed to be serve via lambda 
+6. Add to the **lambda.tf** code that triggers the proccess of building package, needed to be serve via lambda 
 
 ```terraform
 resource "null_resource" "lambda" {
@@ -70,7 +70,7 @@ resource "null_resource" "lambda" {
 }
 ```
 
-8. Inside the same file add resource to create  **bundle.zip** file every time the terraform is triggered  
+7. Inside the same file add resource to create  **bundle.zip** file every time the terraform is triggered  
 
 ```terraform
 data "archive_file" "lambda_bundle" {
@@ -83,7 +83,7 @@ data "archive_file" "lambda_bundle" {
 }
 ```
 
-9. In the **lambda.tf** file add. 
+8. In the **lambda.tf** file add. 
 ```
 resource "aws_cloudwatch_log_group" "index" {
   name              = "/aws/lambda/${var.environment}-${var.application}-index"
@@ -93,7 +93,7 @@ resource "aws_cloudwatch_log_group" "index" {
 The code is responsible for setting retention of cloud watch logs
 
 
-10. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf**. In the file add permission for creating logs, and access to dynamodb created ealier
+9. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf**. In the file add permission for creating logs, and access to dynamodb created ealier
 
 ```terraform
 data "aws_caller_identity" "current" {}
@@ -152,7 +152,7 @@ data "aws_iam_policy_document" "lambda_metadata_document" {
 }
 ```
 
-11. Create Lambda function
+10. Create Lambda function
 
 ```terraform
 resource "aws_lambda_function" "index" {
@@ -174,7 +174,7 @@ resource "aws_lambda_function" "index" {
   }
 ```
 
-12. Add the module to the project. In the **main.tf** file in the **ssr** directory add
+11. Add the module to the project. In the **main.tf** file in the **ssr** directory add
 ```terraform
 module "api" {
   source          = "./modules/api"
@@ -186,7 +186,7 @@ module "api" {
 }
 ```
 
-13. Go to **ssr** directory and deploy the infrastructure
+12. Go to **ssr** directory and deploy the infrastructure
 
 ```terraforrm
 terraform init
@@ -200,7 +200,7 @@ terraform plan
 terraform apply
 ```
 
-14. Go to AWS console and verify if lambda is created
+12. Go to AWS console and verify if lambda is created
 
 ### CREATE API GATEWAY
 
