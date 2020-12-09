@@ -174,7 +174,7 @@ resource "aws_lambda_function" "index" {
   }
 ```
 
-12. Add the module to the project. In the **main.tf** file in the **ssr** file add
+12. Add the module to the project. In the **main.tf** file in the **ssr** directory add
 ```terraform
 module "api" {
   source          = "./modules/api"

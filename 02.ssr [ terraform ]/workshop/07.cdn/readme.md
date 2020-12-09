@@ -1,6 +1,63 @@
+# 07. Amazon CloudFront
 
+## LAB PURPOSE
+
+Create CDN
+
+## DEFINITIONS
+----
+
+### AWS LAMBDA
+
+Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment.
+
+## STEPS
+
+### CREATE LAMBDA FUNCTION
+
+2. Inside **modules**  directory create **cdn** directory
+
+3. Inside **cdn** directory create two files **main.tf** and **variables.tf** and **outputs.tf**
+
+4. Define variables for the the cdm module in the **variables.tf** file
+
+```terraform
+variable "application" {
+  type        = string
+  description = "Application name"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment (e.g. `prod`, `dev`, `staging`)"
+  default     = "dev"
+}
+
+variable "origin_request" {
+  type        = string
+  description = "Lambda origin request"
+}
+
+variable "origin_domain_name" {
+  type        = string
+  description = "Origin domain nane"
+}
+
+variable "orgin_api_domain_name" {
+  type = string
+  description = "Api gateway name"
+}
+```
+
+5. Add to the **main.tf** code that create Origin Access Identity
+
+```terraform
 resource "aws_cloudfront_origin_access_identity" "blog" {}
+```
 
+6. Add cloudfront distribution.
+
+```
 resource "aws_cloudfront_distribution" "distribution" {
   origin {
     domain_name = var.origin_domain_name
@@ -108,3 +165,9 @@ resource "aws_cloudfront_distribution" "distribution" {
     cloudfront_default_certificate = true
   }
 }
+
+```
+
+7. Try to verify what each section of this resource do **https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution**
+
+8. 

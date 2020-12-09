@@ -33,5 +33,14 @@ module "api" {
   region      = var.aws_region
   blog_table_name = module.storage.blog_table_name
   blog_table_arn  = module.storage.blog_table_arn
-  
 }
+
+module "lambda_at_edge" {
+  source      = "./modules/lambda-at-edge"
+  environment = local.environment
+  application = var.application
+  providers = {
+    aws = aws.us-east-1
+  }
+}
+
