@@ -7,7 +7,7 @@ Create CDN
 ## DEFINITIONS
 ----
 
-### AWS LAMBDA
+### AWS CLOUDFRONT
 
 Amazon CloudFront is a fast content delivery network (CDN) service that securely delivers data, videos, applications, and APIs to customers globally with low latency, high transfer speeds, all within a developer-friendly environment.
 
@@ -170,4 +170,93 @@ resource "aws_cloudfront_distribution" "distribution" {
 
 7. Try to verify what each section of this resource do **https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution**
 
-8. 
+8. In the **outputs.tf** file, create resource 
+
+```terraform
+output "origin_access_identity" {
+  value = aws_cloudfront_origin_access_identity.blog.iam_arn
+}
+```
+
+9. Add the module to the project. In the **main.tf** file in the **ssr** directory add
+```terraform
+module "cdn" {
+  source             = "./modules/cdn"
+  environment        = local.environment
+  origin_domain_name = module.storage.origin_domain_name
+  orgin_api_domain_name = trimprefix(trimsuffix(module.api.domain_name, "/${local.environment}"), "https://")
+  application        = var.application
+  origin_request     = module.lambda_at_edge.origin_request
+  
+  providers = {
+    aws = aws.us-east-1
+  }
+}
+```
+
+10. Now you have to add permission to access s3 by cloudfront. To do so , go to **storage** module to **s3.tf** file and add 
+
+```terraform
+data "aws_iam_policy_document" "s3_policy" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.origin_bucket.arn}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = [var.origin_access_identity]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "policy" {
+  bucket = aws_s3_bucket.origin_bucket.id
+  policy = data.aws_iam_policy_document.s3_policy.json
+}
+
+```
+
+11. In this directory modify **variables.tf** file to have
+
+```terraform
+variable "application" {
+  type        = string
+  description = "Application name"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment (e.g. `prod`, `dev`, `staging`)"
+}
+
+variable "origin_access_identity" {
+  description = "Origin Access Identity"
+}
+```
+
+12. Modify the module **storage** in the **main.tf** file which is located in **ssr** directory
+
+```terraform
+module "storage" {
+  source                 = "./modules/storage"
+  environment            = local.environment
+  application            = var.application
+  origin_access_identity = module.cdn.origin_access_identity
+}
+```
+
+12. Go to **ssr** directory and deploy the infrastructure
+
+```terraforrm
+terraform init
+```
+
+```terraforrm
+terraform plan
+```
+
+```terraforrm
+terraform apply
+```
+
+12. Go to AWS console and verify if cloudfront is created
