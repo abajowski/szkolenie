@@ -14,44 +14,54 @@ AWS Amplify is a set of tools and services that can be used together or on their
 
 ### AMPLIFY
 
-1. Be sure to be in **library** directory 
+1. Open new terminal
 
-2. Run ```amplify init```
+2. Go to **library** directory 
 
-3. Press Enter to accept the default project name **library**
+3. Run ```amplify init```
 
-4. Enter **dev** for the environment name
+4. Press Enter to accept the default project name **library**
 
-5. Select **None** for the default editor (we’re using Cloud9)
+5. Enter **dev** for the environment name
 
-6. Choose **JavaScript** and **React** when prompted
+6. Select **None** for the default editor (we’re using Cloud9)
 
-7. Set **Source Directory Path** to default
+7. Choose **JavaScript** and **React** when prompted
 
-8. Set **Distribution Directory Path** to default
+8. Leave default value for **Source Directory Path** 
 
-9. Leave default value for **Build Command** and **Start Command**
+9. Leave default value for **Distribution Directory Path** 
 
-10. Specify the AWS Region **eu-west-1**
+10. Leave default value for **Build Command** and **Start Command**
 
-11. Specify the username of the new IAM user: **amplify**
+11. Wait a while, AWS will ask about **Setup new user**, chose **Y** on this line
 
-12. Open genrated url in the new tab
+12. Press **Enter to continue**
 
-13. Click **Next Permissions**
+13. Specify the AWS Region to **eu-west-1**
 
-14. Click **Next Tags**
+14. Leave default value for **user-name**
 
-15. Click **Next Review**
+15. Complete the user creation using the AWS console to do so open the link which you see in the browser. 
 
-16. Click **Create User**
+15. Click **Next:Permissions**
 
-17. Save credentials and go back to **Cloud9**
+16. Click **Next Tags**
 
-18. Add Credentials from the file
+16. Click **Next Review**
 
-19. Leave **Profile Name** as default
+17. Click **Create User**
 
-20. Choose **Yes** for question:  Do you want to use an AWS profile 
+18. Download **.csv** file and go back to **Cloud9**
 
-21. Press Enter
+19. Press **Enter** to continue
+
+20. Enter the access key of the newly created user from the **.csv** file
+
+21. Leave **Profile name** as default
+
+22. Chose **Y** for the question:Do you want to use an AWS profile
+
+23. Please choose default profile you want to use
+
+24. Press Enter

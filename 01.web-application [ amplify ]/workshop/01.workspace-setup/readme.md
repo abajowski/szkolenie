@@ -18,7 +18,7 @@ AWS Cloud9 is a cloud-based integrated development environment (IDE) that lets y
 2. At the top right corner of the console, make sure you’re using **Ireland (eu-west-1)** region.
 3. Select **Create environment**
 4. Name it **Workshop**, and go to the **Next step**
-5. Select **Create a new instance for environment (EC2)** and pick **t2.small**
+5. Select **Create a new instance for environment (EC2)** and pick **t3.small**
 6. Select **Amazon Linux 2**
 7. Leave all of the environment settings as they are, and go to the **Next step**
 8. Click **Create environment**
