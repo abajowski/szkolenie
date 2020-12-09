@@ -48,3 +48,281 @@ variable "blog_table_arn" {
 ```
 
 5. Now let's prepare the nextjs code to be run on lambda function. To do so, copy **src** directory into **api** directory
+
+6. Inside the directory **src** you have files responsible for the serving & rendered pages, analyze the code
+
+7. Add to the **lambda.tf** code that triggers the proccess of building package, needed to be serve via lambda 
+
+```terraform
+resource "null_resource" "lambda" {
+  provisioner "local-exec" {
+    command     = "cd src && ./build.sh"
+    working_dir = path.module
+  }
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+```
+
+8. Inside the same file add resource to create  **bundle.zip** file every time the terraform is triggered  
+
+```terraform
+data "archive_file" "lambda_bundle" {
+  type        = "zip"
+  output_path = "${path.module}/tmp/bundle.zip"
+  source_dir  = "${path.module}/src/"
+
+  depends_on = [null_resource.lambda]
+
+}
+```
+
+9. In the **lambda.tf** file add. 
+```
+resource "aws_cloudwatch_log_group" "index" {
+  name              = "/aws/lambda/${var.environment}-${var.application}-index"
+  retention_in_days = 14
+}
+```
+The code is responsible for setting retention of cloud watch logs
+
+
+10. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf**. In the file add permission for creating logs, and access to dynamodb created ealier
+
+```terraform
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "lambda_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "lambda.amazonaws.com"
+      ]
+    }
+  }
+}
+
+resource "aws_iam_role" "lambda_role" {
+  name               = "lambda-execution-role-${var.environment}-${var.application}-api"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_metadata_policy_attachement" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_metadata_policy.arn
+}
+
+resource "aws_iam_policy" "lambda_metadata_policy" {
+  name   = "lambda-policy-${var.environment}-${var.application}-api"
+  policy = data.aws_iam_policy_document.lambda_metadata_document.json
+}
+
+data "aws_iam_policy_document" "lambda_metadata_document" {
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    effect    = "Allow"
+    resources = ["arn:aws:logs:*:*:*"]
+  }
+
+
+  statement {
+    actions = [
+      "dynamodb:PutItem",
+      "dynamodb:GetItem"
+    ]
+    effect = "Allow"
+    resources = [
+      var.blog_table_arn
+    ]
+  }
+
+}
+```
+
+11. Create Lambda function
+
+```terraform
+resource "aws_lambda_function" "index" {
+  description      = "SSR page generator"
+  filename         = data.archive_file.lambda_bundle.output_path
+  function_name    = "${var.environment}-${var.application}-index"
+  handler          = "index.handler"
+  memory_size      = 1024
+  role             = aws_iam_role.lambda_role.arn
+  runtime          = "nodejs12.x"
+  source_code_hash = data.archive_file.lambda_bundle.output_base64sha256
+  timeout          = 60
+  publish          = true
+
+  environment {
+    variables = {
+      TABLE = var.blog_table_name
+    }
+  }
+```
+
+12. Add the module to the project. In the **main.tf** file in the **ssr** file add
+```terraform
+module "api" {
+  source          = "./modules/api"
+  environment     = local.environment
+  application     = var.application
+  region          = var.aws_region
+  blog_table_name = module.storage.blog_table_name
+  blog_table_arn  = module.storage.blog_table_arn
+}
+```
+
+13. Go to **ssr** directory and deploy the infrastructure
+
+```terraforrm
+terraform init
+```
+
+```terraforrm
+terraform plan
+```
+
+```terraforrm
+terraform apply
+```
+
+14. Go to AWS console and verify if lambda is created
+
+### CREATE API GATEWAY
+
+1. Now is a time to create API Gateway, to do so we have to create open API specification. Analyze the code below, then create direcory **open-api** inside **api** directory. In **open-api** directory add file **template.yaml** and add the code there. 
+
+```yaml
+openapi: "3.0.1"
+info:
+  title: ${api_name}
+  version: "2020-11-27T12:18:31Z"
+
+x-amazon-apigateway-policy:
+  Version: "2012-10-17"
+  Statement:
+    - Effect: Allow
+      Principal: "*"
+      Action:
+        - execute-api:Invoke
+      Resource: "*"
+
+paths:
+  /{proxy+}:
+    get:
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${index}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        timeoutInMillis: ${timeout}
+        type: "aws_proxy"
+          
+components:
+  securitySchemes:
+    api_key:
+      type: "apiKey"
+      name: "x-api-key"
+      in: "header"
+```
+
+2. In **api** directory create **api-gateway.tf** file
+
+3. In this file create resource which is able to parse the open api specificatioon
+
+```terraform
+data "template_file" "api_documentation" {
+  template = file("${path.module}/open-api/template.yaml")
+
+  vars = {
+    api_name = "api-gateway-${var.environment}-${var.application}"
+    region   = var.region
+    timeout  = 29000
+    index    = aws_lambda_function.index.arn
+  }
+}
+```
+
+4. Create api gateway resource in **api-gateway** file
+
+```terraform
+resource "aws_api_gateway_rest_api" "api" {
+  name = "api-gateway-${var.environment}-${var.application}"
+  body = data.template_file.api_documentation.rendered
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+}
+```
+
+5. Create api key, to protect our api
+
+```terraform
+resource "aws_api_gateway_api_key" "api_key" {
+  name = "api-key-${var.environment}-${var.application}"
+}
+```
+
+6. Create api gateway deployment
+
+```terraform
+resource "aws_api_gateway_deployment" "stage" {
+  depends_on  = [aws_api_gateway_rest_api.api]
+  rest_api_id = aws_api_gateway_rest_api.api.id
+}
+```
+
+7. Create api gateway deployment
+
+```
+resource "aws_api_gateway_stage" "stage" {
+  depends_on    = [aws_api_gateway_rest_api.api]
+  deployment_id = aws_api_gateway_deployment.stage.id
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  stage_name    = var.environment
+}
+```
+
+8. Create api gateway stage
+
+resource "aws_api_gateway_usage_plan" "usage_plan" {
+  depends_on = [aws_api_gateway_stage.stage]
+  name       = "usage-plan-${var.environment}-${var.application}"
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.api.id
+    stage  = var.environment
+  }
+}
+
+9. Go to **ssr** directory and deploy the infrastructure
+
+```terraforrm
+terraform init
+```
+
+```terraforrm
+terraform plan
+```
+
+```terraforrm
+terraform apply
+```
+
+10. Go to AWS console and verify if api gateway is created

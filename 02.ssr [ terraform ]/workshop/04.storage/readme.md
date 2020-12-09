@@ -21,7 +21,7 @@ Amazon DynamoDB is a fully managed proprietary NoSQL database service that suppo
 
 1. Create a directory **modules** inside **ssr** directory. It will be a place where all terraform modules will be created. A terraform module is a container for multiple resources that are used together. Modules can be used to create lightweight abstractions, so that you can describe your infrastructure in terms of its architecture, rather than directly in terms of physical objects.
 
-2. Inside **modules** create **storage** directory
+2. Inside **modules**  directory create **storage** directory
 
 3. Inside **storage** directory create two files **s3.tf** and **variables.tf**
 
@@ -78,7 +78,6 @@ variable "application" {
 }
 
 ```
-
 
 9. Now it is a time to initialize the terraform, and deploy it to environemnt
 ```terraforrm
