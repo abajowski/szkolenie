@@ -20,17 +20,17 @@ Amazon Simple Storage Service (Amazon S3) is an object storage service that offe
 
 3. Select **Content** at the prompt
 
-4. Enter values or accept defaults for the resource category and bucket name
+4. Accept defaults for the **Please provide a friendly name for your resource that will be used to label this category in the project** and **Please provide bucket name**
 
-5. Choose Auth users only when asked who should have access. Configure it so that authenticated users have access with create/update, read, and delete access (use the spacebar to toggle on/off, the arrow keys to move, and Enter to continue).
+5. Choose Auth users only when asked who should have access. Configure it so that authenticated users have access with **create/update, read, and delete access**  (use the spacebar to toggle on/off, the arrow keys to move, and Enter to continue).
 
-6. Select Yes when asked to add a Lambda Trigger for your S3 Bucket and select Create new function. This will create a Lambda function that will get triggered by S3 Events. Later on we’ll use this function for photo processing.
+6. Select **No** when asked to add a Lambda Trigger for your S3 Bucket and select Create new function. 
 
-7. Select No when asked to edit a the Lambda function. We’ll do this at a later step in the workshop.
+7. Run amplify push
 
-8. Run amplify push
+8. Press Enter to confirm the changes
 
-9. Press Enter to confirm the changes
+9. Go to **AWS Console** and verify if **S3 Bucket**
 
 ### UPDATE THE APP
 
@@ -38,4 +38,6 @@ Amazon Simple Storage Service (Amazon S3) is an object storage service that offe
 
 2. Replace **src/App.js** with file **App.js** which is saved in **source** directory
 
-3. Check out the app now and try out the new features
+3. Check out the app now and upload the image to the album
+
+4. Verify if the image is successfully uploaded

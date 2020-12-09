@@ -9,7 +9,7 @@ Cleaning up resources
 
 ### DELETING VIA AMPLIFY
 
-1. From the albums directory, run: ```amplify delete``` and press Enter to confirm the deletion.
+1. From the **library** directory, run: ```amplify delete``` and press Enter to confirm the deletion.
 
 2. Wait several minutes while Amplify deletes the resources it created for us during this workshop.
 
@@ -19,6 +19,6 @@ Cleaning up resources
 
 1. Go to your Cloud9 Environment
 
-2. Select the environment named workshop and pick Delete
+2. Select the environment named **workshop** and pick Delete
 
 3. Type the phrase **Delete** into the confirmation box and click Delete

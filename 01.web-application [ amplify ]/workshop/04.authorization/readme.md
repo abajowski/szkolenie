@@ -1,8 +1,8 @@
-# 04. AUTHENTICATION
+# 04. AUTHORIZATION
 
 ## LAB PURPOSE
 
-Create User Directory and authenticaction for the users
+Create User Directory
 
 ## DEFINITIONS
 ----
@@ -12,26 +12,35 @@ Amazon Cognito lets you add user sign-up, sign-in, and access control to your we
 
 ## STEPS
 
-### AUTHENTICATION
+### AUTHORIZATION
 
 1. Be sure to be in **library** directory 
 
 2. Run ```amplify add auth``` to add authentication to the app
 
-3. Select **Default Configuration** when asked if you’d like to use the default authentication and security configuration
+3. Select **Default Configuration** when asked: Do you want to use the default authentication and security configuration
 
-4. **Select Username** when asked how you want users to sign in
+4. **Select Username** when asked: How do you want users to be able to sign in
 
 5. Select **No, I am done**
 
 7. Run ```amplify push``` to create these changes in the cloud
 
-8.  Add the **aws-amplify** and **aws-amplify-react** modules to our app by typing 
+8. Confirm that you want to continue, and wait it may take a few minutes.
+
+9. Go to **AWS console** and verify new created resource in **AWS Cognito** service
+
+10. Let's modify FE application, to do so add the **aws-amplify** and **aws-amplify-react** modules to our app by typing 
+
 ```bash
 npm install --save aws-amplify@3.0.7 aws-amplify-react@3.1.9
 ```
 
-9. Replace **src/App.js** with file **App.js** which is saved in **source** directory
+11. Replace **src/App.js** with file **App.js** which is saved in **source** directory
+
+12. Wait a while, for end of the process of compiling the files
+
+13. Preview once again the running application
 
 ### CREATE AN ACCOUNT
 
