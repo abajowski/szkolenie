@@ -39,7 +39,7 @@ variable "environment" {
 }
 ```
 
-5. Create S3 Bucket in the **main.tf** file, where all static will be stored
+5. Create S3 Bucket in the **s3.tf** file, where all static files will be stored
 
 ```terraform
 resource "aws_s3_bucket" "origin_bucket" {
@@ -69,7 +69,7 @@ locals {
 }
 ```
 
-8. Add additional environment variables in the **variable.tf** int the **ssr** file
+8. Add additional environment variables in the **variable.tf** int the **ssr** directory
 ```terraforrm
 variable "application" {
   type        = string
@@ -92,7 +92,9 @@ terraform plan
 terraform apply
 ```
 
-10. Go to AWS console, and verify that S3 bucket is created
+10. Conirm that you wnat to perform these actions
+
+11. Go to AWS console, and verify that S3 bucket is created
 
 ### CREATE DYNAMODB TABLE
 
@@ -126,5 +128,7 @@ terraform plan
 terraform apply
 ```
 
-4. Go to AWS console and verify if table is created
+4. Conirm that you wnat to perform these actions
+
+5. Go to AWS console and verify if table is created
 

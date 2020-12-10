@@ -9,3 +9,4 @@ variable "application" {
   description = "Application name"
   default     = "blog"
 }
+
