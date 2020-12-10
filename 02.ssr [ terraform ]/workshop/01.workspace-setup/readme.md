@@ -43,11 +43,29 @@ Clone the repository to your **Cloud9** environment and start working on code. R
 ### CONFIGURE AWS CREDENTIALS LOCALLY
 
 1. Go to **Cloud9** web console.
-2. Verify that you have CLI configured properly, to do so run
+2. Click **AWS Cloud9**
+3. Go to **Preferences**
+4. Go to **AWS Settings**
+5. Click **Credentials** 
+6. Disable **AWS Managed temporary credenttials**
+7. Verify that you have CLI configured properly, to do so run
 ```bash
 aws sts get-caller-identity
 ```
-3. If you see something similar, skip next steps
+8. In AWS console go to IAM service, and create user with **AdministratorAccess** policy attached. Download **.csv** file
+
+9. Configure the AWS CLI in the Cloud9 terminal
+```bash
+aws configure
+```
+10. Set your admin **AWS Access Key ID** and **AWS Secret Access Key** from the **.csv** file 
+11. Set **Default region name** to **eu-west-1**
+12. Set **Default output format** to **json**
+13. To verify that everything is working run
+```bash
+aws sts get-caller-identity
+```
+If you see something similar, you have configured the environment correctly
 ```json
 {
     "Account": "646407006236", 
@@ -55,18 +73,3 @@ aws sts get-caller-identity
     "Arn": "arn:aws:iam::646407006236:user/admin"
 }
 ```
-
-4. In AWS console go to IAM service, and create user with **AdministratorAccess** policy attached. Download **.csv** file
-
-5. Configure the AWS CLI in the Cloud9 terminal
-```bash
-aws configure
-```
-4. Set your admin **AWS Access Key ID** and **AWS Secret Access Key** from the **.csv** file 
-5. Set **Default region name** to **eu-west-1**
-6. Set **Default output format** to **json**
-7. To verify that everything is working run
-```bash
-aws sts get-caller-identity
-```
-

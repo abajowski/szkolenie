@@ -100,7 +100,7 @@ terraform apply
 
 1. Inside **storage** directory create **dynamodb.tf** file
 
-2. In newly created file add resource responsive for dynamodb creation
+2. In newly created file add resource responsible for dynamodb creation
 
 ```terraform
 resource "aws_dynamodb_table" "blog" {
@@ -113,8 +113,31 @@ resource "aws_dynamodb_table" "blog" {
   }
 }
 ```
+3. Create  **outputs.tf** file in the **storage** directory and add the following code there
 
-3. Go to **ssr** directory and deploy the infrastructure
+```terraform
+output "blog_table_arn" {
+  value = aws_dynamodb_table.blog.arn
+}
+
+output "blog_table_name" {
+  value = aws_dynamodb_table.blog.id
+}
+
+output "origin_domain_name" {
+  value = aws_s3_bucket.origin_bucket.bucket_regional_domain_name
+}
+
+output "origin_bucket_arn" {
+  value = aws_s3_bucket.origin_bucket.arn
+}
+
+output "origin_bucket_name" {
+  value = aws_s3_bucket.origin_bucket.id
+}
+```
+
+4. Go to **ssr** directory and deploy the infrastructure
 
 ```terraforrm
 terraform init

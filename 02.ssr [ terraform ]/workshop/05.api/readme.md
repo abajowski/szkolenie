@@ -49,7 +49,7 @@ variable "blog_table_arn" {
 
 4. Now let's prepare the nextjs code to be run on lambda function. To do so, copy **src** directory into **api** directory
 
-5. Inside the directory **src** you have files responsible for the serving & rendered pages, analyze the code
+5. Inside the directory **src** you have files responsible for the serving & rendering pages, analyze the code. Next run ```npm install``` and ```npm run build``` in terminal inside **src** directory to verify if the code compile
 
 6. Add to the **lambda.tf** code that triggers the proccess of building package, needed to be serve via lambda 
 
@@ -93,7 +93,7 @@ resource "aws_cloudwatch_log_group" "index" {
 The code is responsible for setting retention of cloud watch logs
 
 
-9. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf**. In the file add permission for creating logs, and access to dynamodb created ealier
+9. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf** in **api** directory. In the file add permission for creating logs, and access to dynamodb created ealier
 
 ```terraform
 data "aws_caller_identity" "current" {}
@@ -152,7 +152,7 @@ data "aws_iam_policy_document" "lambda_metadata_document" {
 }
 ```
 
-10. Create Lambda function
+10. Next create Lambda function in the **lambda.tf** file
 
 ```terraform
 resource "aws_lambda_function" "index" {
@@ -172,6 +172,7 @@ resource "aws_lambda_function" "index" {
       TABLE = var.blog_table_name
     }
   }
+}
 ```
 
 11. Add the module to the project. In the **main.tf** file in the **ssr** directory add
@@ -200,7 +201,13 @@ terraform plan
 terraform apply
 ```
 
-12. Go to AWS console and verify if lambda is created
+13. Test your lambda in the AWS console, to do so go to **https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/dev-blog-index** 
+
+14. Click **Test** button
+
+15. From the **Event template** list chose **Amazon API Gateway Proxy** then add the **Event name** and click create
+
+16. Click **Test** button again, you should see **green screen** with 404 error 
 
 ### CREATE API GATEWAY
 
@@ -311,7 +318,31 @@ resource "aws_api_gateway_usage_plan" "usage_plan" {
   }
 }
 
-9. Go to **ssr** directory and deploy the infrastructure
+9. Let's add permission for API Gateway to invoke a lambda, to do so please add following code in the **lambda.tf** file
+
+```terraform
+
+data "aws_caller_identity" "this" {}
+
+resource "aws_lambda_permission" "index" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.index.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.this.account_id}:${aws_api_gateway_rest_api.api.id}/*/*/*"
+}
+```
+
+10. In the **api** directory create **output.tf** file and put code listed below
+
+```terraform
+output "domain_name" {
+  value       = aws_api_gateway_stage.stage.invoke_url
+  description = "The URL to invoke the API pointing to the stage"
+}
+```
+
+11. Go to **ssr** directory and deploy the infrastructure
 
 ```terraforrm
 terraform init
@@ -325,4 +356,11 @@ terraform plan
 terraform apply
 ```
 
-10. Go to AWS console and verify if api gateway is created
+12. Go to AWS console **https://eu-west-1.console.aws.amazon.com/apigateway/main/apis?region=eu-west-1** find the **api-gateway-dev-blog** click on it
+
+13. Click **{proxy+}**
+14. Next click **GET**
+15. Next click **Test**
+16. For the proxy value put **about**
+17. Click **Test** , you should see on the right side that you have in response body response with 200 status code
+18. Check the same for **index** page
