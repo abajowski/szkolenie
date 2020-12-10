@@ -85,7 +85,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "origin-static-${var.environment}-${var.application}"
+    target_origin_id = "origin-ssr-${var.environment}-${var.application}"
 
     forwarded_values {
       query_string = false
@@ -101,10 +101,15 @@ resource "aws_cloudfront_distribution" "distribution" {
     min_ttl                = 0
     default_ttl            = 10
     max_ttl                = 2592000
+    
+    lambda_function_association {
+      event_type   = "origin-request"
+      lambda_arn = var.origin_request
+    }
   }
 
   ordered_cache_behavior {
-    target_origin_id = "origin-static-${var.environment}-${var.application}"
+    target_origin_id = "origin-ssr-${var.environment}-${var.application}"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
 
@@ -165,6 +170,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     cloudfront_default_certificate = true
   }
 }
+
 
 ```
 
@@ -234,7 +240,7 @@ variable "origin_access_identity" {
 }
 ```
 
-11. Modify the module **storage** in the **main.tf** file which is located in **ssr** directory
+11. Modify the module **storage**. In the **main.tf** file which is located in **ssr** directory change module to
 
 ```terraform
 module "storage" {
@@ -259,4 +265,6 @@ terraform plan
 terraform apply
 ```
 
-13. Go to AWS console and verify if cloudfront is created
+13. Go to AWS console and verify if cloudfront **https://console.aws.amazon.com/cloudfront/home?region=eu-west-1#distributions:** is created
+
+14. Find the **Domain name** of your cloudfront, open in the browser eg d2tq2mqcgzlv60.cloudfront.net/dev/index , please remember to add **/dev/index** at the end. You can try also with the **/dev/about**

@@ -7,7 +7,7 @@ data "archive_file" "lambda_bundle" {
 resource "aws_lambda_function" "lambda" {
   description      = "Function to run nextjs"
   filename         = data.archive_file.lambda_bundle.output_path
-  function_name    = "lambda-${var.environment}-${var.application}"
+  function_name    = "lambda-edge-${var.environment}-${var.application}"
   handler          = "index.handler"
   memory_size      = 128
   role             = aws_iam_role.lambda_execution_role.arn
@@ -16,3 +16,4 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 3
   publish          = true
 }
+

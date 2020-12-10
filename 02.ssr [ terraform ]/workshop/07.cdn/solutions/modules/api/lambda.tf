@@ -1,14 +1,3 @@
-data "aws_caller_identity" "this" {}
-
-data "archive_file" "lambda_bundle" {
-  type        = "zip"
-  output_path = "${path.module}/tmp/bundle.zip"
-  source_dir  = "${path.module}/src/"
-
-  depends_on = [null_resource.lambda]
-
-}
-
 resource "null_resource" "lambda" {
   provisioner "local-exec" {
     command     = "cd src && ./build.sh"
@@ -24,12 +13,13 @@ resource "null_resource" "lambda" {
   }
 }
 
-resource "aws_lambda_permission" "index" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.index.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.this.account_id}:${aws_api_gateway_rest_api.api.id}/*/*/*"
+data "archive_file" "lambda_bundle" {
+  type        = "zip"
+  output_path = "${path.module}/tmp/bundle.zip"
+  source_dir  = "${path.module}/src/"
+
+  depends_on = [null_resource.lambda]
+
 }
 
 resource "aws_cloudwatch_log_group" "index" {
@@ -51,12 +41,17 @@ resource "aws_lambda_function" "index" {
 
   environment {
     variables = {
-      TABLE = ""
+      TABLE = var.blog_table_name
     }
   }
+}
 
-  depends_on = [
-    aws_cloudwatch_log_group.index,
-    null_resource.lambda
-  ]
+data "aws_caller_identity" "this" {}
+
+resource "aws_lambda_permission" "index" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.index.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.this.account_id}:${aws_api_gateway_rest_api.api.id}/*/*/*"
 }

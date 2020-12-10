@@ -1,4 +1,3 @@
-
 resource "aws_cloudfront_origin_access_identity" "blog" {}
 
 resource "aws_cloudfront_distribution" "distribution" {
@@ -28,7 +27,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "origin-static-${var.environment}-${var.application}"
+    target_origin_id = "origin-ssr-${var.environment}-${var.application}"
 
     forwarded_values {
       query_string = false
@@ -44,10 +43,15 @@ resource "aws_cloudfront_distribution" "distribution" {
     min_ttl                = 0
     default_ttl            = 10
     max_ttl                = 2592000
+    
+    lambda_function_association {
+      event_type   = "origin-request"
+      lambda_arn = var.origin_request
+    }
   }
 
   ordered_cache_behavior {
-    target_origin_id = "origin-static-${var.environment}-${var.application}"
+    target_origin_id = "origin-ssr-${var.environment}-${var.application}"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
 
@@ -108,3 +112,4 @@ resource "aws_cloudfront_distribution" "distribution" {
     cloudfront_default_certificate = true
   }
 }
+
