@@ -28,30 +28,45 @@ AWS Cloud9 is a cloud-based integrated development environment (IDE) that lets y
 Clone the repository to your **Cloud9** environment and start working on code. Run the following command:
 
 ```bash
-  git clone https://github.com/abajowski/szkolenie
+  git clone https://github.com/cloudaemons/serverless/
 ```
 
 ### CREATE BUCKET S3 FOR ARTIFACTS
 
 1. Go to **S3** web console.
 2. Click **Create bucket** button
-3. Enter DNS-compliant bucket name
+3. Enter DNS-compliant **Bucket name**
 4. Choose **Ireland (eu-west-1)** region
-5. Click **Next** three times, then click **Create bucket**
+5. Leave other settings as default
+6. Then click **Create bucket**
 
 ### CONFIGURE AWS CREDENTIALS LOCALLY
 
 1. Go to **Cloud9** web console.
-2. In terminal window configure the AWS CLI
+2. Verify that you have CLI configured properly, to do so run
+```bash
+aws sts get-caller-identity
+```
+3. If you see something similar, skip next steps
+```json
+{
+    "Account": "646407006236", 
+    "UserId": "AIDAI43XPIK3ZA6O6CMBW", 
+    "Arn": "arn:aws:iam::646407006236:user/admin"
+}
+```
+
+4. In AWS console go to IAM service, and create user with **AdministratorAccess** policy attached. Download **.csv** file
+
+5. Configure the AWS CLI in the Cloud9 terminal
 ```bash
 aws configure
 ```
-4. Set your admin **AWS Access Key ID** and **AWS Secret Access Key** which you received ealier. If you don't have this credentials ask you tutor 
+4. Set your admin **AWS Access Key ID** and **AWS Secret Access Key** from the **.csv** file 
 5. Set **Default region name** to **eu-west-1**
 6. Set **Default output format** to **json**
 7. To verify that everything is working run
 ```bash
 aws sts get-caller-identity
 ```
-If you see returned information go to next part
 
