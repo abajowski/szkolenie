@@ -36,7 +36,7 @@ variable "environment" {
 
 4. Now let's prepare the code to be run on lambda function. To do so, copy **src** directory into **lambda-at-edge** directory
 
-5. Change the lambda code. You have to change the value **YOUR_API_KEY** . To get the value of API_KEY go to AWS console **API GATEWAY** service
+5. Change the lambda code. You have to change the value **YOUR_API_KEY** . 
 
 ```
 exports.handler = async (event, context) => {
@@ -46,7 +46,14 @@ exports.handler = async (event, context) => {
 }
 ```
 
-6. Add to the **lambda.tf**  resource to create  **bundle.zip** file every time the terraform is triggered   
+
+6.  To get the value of API_KEY go to AWS console **API GATEWAY** service **https://eu-west-1.console.aws.amazon.com/apigateway/home?region=eu-west-1#/api-keys**
+
+7. Find your key, click on it, then click the **Show** button
+
+8. Put the value to your code
+
+9. Add to the **lambda.tf**  resource to create  **bundle.zip** file every time the terraform is triggered   
 
 ```terraform
 data "archive_file" "lambda_bundle" {
@@ -57,7 +64,7 @@ data "archive_file" "lambda_bundle" {
 
 ```
 
-7. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf**. In the file add permission for creating logs
+10. Let's prepare the file with permission which lambda require when it is running , to do so create **iam.tf**. In the file add permission for creating logs
 
 ```terraform
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -102,16 +109,15 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachement" {
   policy_arn = aws_iam_policy.lambda_policy.arn
 }
 
-}
 ```
 
-8. Create Lambda function
+11. Create Lambda function in the **lambda.tf** file
 
 ```terraform
 resource "aws_lambda_function" "lambda" {
   description      = "Function to run nextjs"
   filename         = data.archive_file.lambda_bundle.output_path
-  function_name    = "lambda-${var.environment}-${var.application}"
+  function_name    = "lambda-edge-${var.environment}-${var.application}"
   handler          = "index.handler"
   memory_size      = 128
   role             = aws_iam_role.lambda_execution_role.arn
@@ -122,7 +128,7 @@ resource "aws_lambda_function" "lambda" {
 }
 ```
 
-9. Create **outputs.tf** file inside the **lambda-at-edge** directory. And then add following code
+12. Create **outputs.tf** file inside the **lambda-at-edge** directory. And then add following code
 
 ```terraform
 output "origin_request" {
@@ -131,7 +137,7 @@ output "origin_request" {
 }
 ```
 
-10. Lambda ad edge should be deployed in **us-east-1** region. To do so you have to create new AWS provider. In the **main.tf** file in the **ssr** directory add
+13. Lambda ad edge should be deployed in **us-east-1** region. To do so you have to create new AWS provider. In the **main.tf** file in the **ssr** directory add
 
 ```terraform
 provider "aws" {
@@ -140,7 +146,7 @@ provider "aws" {
 }
 ```
 
-11. Add the module to the project. In the **main.tf** file in the **ssr** directory add
+14. Add the module to the project. In the **main.tf** file in the **ssr** directory add
 ```terraform
 module "lambda_at_edge" {
   source      = "./modules/lambda-at-edge"
@@ -152,7 +158,7 @@ module "lambda_at_edge" {
 }
 ```
 
-12. Go to **ssr** directory and deploy the infrastructure
+15. Go to **ssr** directory and deploy the infrastructure
 
 ```terraforrm
 terraform init
@@ -166,5 +172,5 @@ terraform plan
 terraform apply
 ```
 
-12. Go to AWS console and verify if lambda is created
+16. Go to AWS console and verify if lambda is created
 
