@@ -48,7 +48,7 @@ provider "aws" {
 }
 ```
 
-9. Now it is a time to initialize the terraform, and deploy it to environemnt
+9. Now it is a time to initialize the terraform, and deploy it to environemnt, in the **Cloud9** terminal run
 ```terraforrm
 terraform init
 ```
