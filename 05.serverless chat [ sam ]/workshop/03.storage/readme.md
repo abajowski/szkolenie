@@ -37,6 +37,13 @@ Amazon DynamoDB is a fully managed proprietary NoSQL database service that suppo
       TableName: !Ref TableName
   ```
 
+  On top of the file add also:
+  ```yaml
+  Parameters:
+    TableName: 
+      Type: String
+      Default: 'chat'
+  ```
 
 3. Upload local artifacts that might be required by your template. To do so, use the command listed below. In response, you should see serverless-chat-tmp.yaml. This is a template after SAM transformation. Open it and familiarize with its structure.
 
@@ -52,6 +59,4 @@ Amazon DynamoDB is a fully managed proprietary NoSQL database service that suppo
 
 5. Go to cloudformation console  https://console.aws.amazon.com/cloudformation, find your stack **serverless-chat**, and verify what resources have been created, to do that, go to section **Resources**. 
 
-6. Go to dynamo db console **https://console.aws.amazon.com/dynamodb**, find your table, and verify what have been created
-
-7. End of the lab. Your first cloudformation stack is ready.
+6. End of the lab. Your first cloudformation stack is ready.
